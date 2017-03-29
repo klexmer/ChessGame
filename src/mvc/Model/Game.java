@@ -10,13 +10,17 @@ package mvc.Model;
  * @author p1401687
  */
 public class Game {
+    public static final boolean WHITE = true;
+    public static final boolean BLACK = false;
+    
+    
     private Player white;
     private Player black;
     private Board board;
     private Player activePlayer;
     public Game() {
-        this.white = new Player();
-        this.black = new Player();
+        this.white = new Player(WHITE);
+        this.black = new Player(BLACK);
         this.board = new Board();
         activePlayer = white;
     }

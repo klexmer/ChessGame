@@ -5,6 +5,9 @@
  */
 package mvc.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author p1401687
@@ -17,7 +20,19 @@ public class Rook extends Piece{
 
     @Override
     public Move[] getDeplacements(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List moves = new ArrayList();
+        
+        for(int i = 1 ; i < 8 ; i++){
+            if(x-i >0)
+                    moves.add(new Move(new Point(x, y),new Point(x-i, y)));
+            if(y-i>0)
+                    moves.add(new Move(new Point(x, y),new Point(x, y-i)));
+            if(y+i<8)
+                    moves.add(new Move(new Point(x, y),new Point(x, y+i)));
+            if(x+i <8)
+                    moves.add(new Move(new Point(x, y),new Point(x-i, y-i)));
+        }    
+        return (Move[]) moves.toArray();
     }
 
 

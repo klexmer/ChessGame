@@ -10,5 +10,16 @@ package mvc.Model;
  * @author p1401687
  */
 public class Player {
+    private boolean isWhite;
+    
+
+    public Player(boolean isWhite) {
+        this.isWhite = isWhite;
+    }
+
+    public boolean isWhite() {
+        return isWhite;
+    }
+    
     
 }
