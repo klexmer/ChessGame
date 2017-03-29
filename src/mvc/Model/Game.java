@@ -13,12 +13,27 @@ public class Game {
     private Player white;
     private Player black;
     private Board board;
-
-    public Game(Player white, Player black) {
-        this.white = white;
-        this.black = black;
+    private Player activePlayer;
+    public Game() {
+        this.white = new Player();
+        this.black = new Player();
         this.board = new Board();
+        activePlayer = white;
+    }
+
+    public Board getBoard() {
+        return board;
     }
     
+    public void nextPlayerTurn(){
+        if(activePlayer == white)
+            activePlayer = black;
+        else 
+            activePlayer = white;
+    }
+    
+    public Player getAcivePlayer(){
+        return activePlayer;
+    }
     
 }

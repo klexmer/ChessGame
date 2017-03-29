@@ -24,6 +24,10 @@ public abstract class Piece {
     public void setLiving(boolean living) {
         this.living = living;
     }
-    
-    public abstract Move[] getDeplacement();
+
+    public Player getOwner() {
+        return owner;
+    }
+        
+    public abstract Move[] getDeplacements(int x,int y);
 }
