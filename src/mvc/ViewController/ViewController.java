@@ -58,7 +58,7 @@ public class ViewController extends Application {
         SubScene box;
         BorderPane boxContent;
         ImageView pieceImg;
-        String imagePath = new String("");
+        String imagePath = "";
         for (int i = 0; i < 64; i++) {
             gridPaneBoard.add(new SubScene(new BorderPane(), 50.0, 50.0),
                     column,
@@ -71,40 +71,39 @@ public class ViewController extends Application {
                 box.setFill(Color.BEIGE);
             if(game.getBoard().getPiece(row, column) != null){
                 p = game.getBoard().getPiece(row, column);
-                switch(p.getOwner().getColor()){
-                    case "Black":
-                        imagePath.concat("black_");
-                        break;
-                    case "White":
-                        imagePath.concat("white_");
-                        break;
-                }
+                //Couleur de la pièce
+                if(p.getOwner().isWhite())
+                    imagePath += "white_";
+                else
+                    imagePath += "black_";
+                //Type de la pièce
                 switch(p.getClass().toString()){
                     case "class mvc.Model.Pawn":
-                        imagePath.concat("pawn");
+                        imagePath += "pawn";
                         break;
                     case "class mvc.Model.King":
-                        imagePath.concat("king");
+                        imagePath += "king";
                         break;
                     case "class mvc.Model.Queen":
-                        imagePath.concat("queen");
+                        imagePath += "queen";
                         break;
                     case "class mvc.Model.Rook":
-                        imagePath.concat("rook");
+                        imagePath += "rook";
                         break;
                     case "class mvc.Model.Bishop":
-                        imagePath.concat("bishop");
+                        imagePath += "bishop";
                         break;
                     case "class mvc.Model.Knight":
-                        imagePath.concat("knight");
+                        imagePath += "knight";
                         break;
                 }
                 boxContent = (BorderPane)box.getRoot();
                 pieceImg = new ImageView();
+                imagePath = "/resources/pieces/" + imagePath + ".png";
                 pieceImg.setImage(new Image(getClass().getResource(
-                                  "resources/pieces/" +
-                                          imagePath +
-                                          ".png").toString()));
+                                          imagePath).toString()));
+                pieceImg.setFitHeight(50);
+                pieceImg.setFitWidth(50);
                 boxContent.setCenter(pieceImg);
 
             }
