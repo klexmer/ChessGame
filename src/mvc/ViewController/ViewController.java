@@ -9,11 +9,15 @@ import java.util.Observer;
 import javafx.application.Application;
 
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.Shadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -51,52 +55,59 @@ public class ViewController extends Application {
         int column = 0;
         int row = 0;
         Piece p;
-        Text box;
+        SubScene box;
+        BorderPane boxContent;
+        ImageView pieceImg;
+        String imagePath = new String("");
         for (int i = 0; i < 64; i++) {
-            /*if((column + row) % 2 == 0)
-                t = new Text("B");
+            gridPaneBoard.add(new SubScene(new BorderPane(), 50.0, 50.0),
+                    column,
+                    row);
+            box = (SubScene)gridPaneBoard.getChildren().get(row * 8 + column);
+            
+            if((column + row) % 2 == 0)
+                box.setFill(Color.SIENNA);
             else
-                t = new Text("W");*/
-            box = new Text();
+                box.setFill(Color.BEIGE);
             if(game.getBoard().getPiece(row, column) != null){
                 p = game.getBoard().getPiece(row, column);
-                switch(p.getClass().toString()){
-                    case "Pawn":
-                        box.setText("P");
-                        break;
-                    case "King":
-                        box.setText("K");
-                        break;
-                    case "class mvc.Model.Queen":
-                        box.setText("Q");
-                        break;
-                    case "Rook":
-                        box.setText("R");
-                        break;
-                    case "Bishop":
-                        box.setText("P");
-                        break;
-                    case "Knight":
-                        box.setText("P");
-                        break;
-                }
-                /*switch(p.getOwner().getColor()){
+                switch(p.getOwner().getColor()){
                     case "Black":
-                        box.setText(box.getText() + "-B");
+                        imagePath.concat("black_");
                         break;
                     case "White":
-                        box.setText(box.getText() + "-W");
+                        imagePath.concat("white_");
                         break;
-                }*/
+                }
+                switch(p.getClass().toString()){
+                    case "class mvc.Model.Pawn":
+                        imagePath.concat("pawn");
+                        break;
+                    case "class mvc.Model.King":
+                        imagePath.concat("king");
+                        break;
+                    case "class mvc.Model.Queen":
+                        imagePath.concat("queen");
+                        break;
+                    case "class mvc.Model.Rook":
+                        imagePath.concat("rook");
+                        break;
+                    case "class mvc.Model.Bishop":
+                        imagePath.concat("bishop");
+                        break;
+                    case "class mvc.Model.Knight":
+                        imagePath.concat("knight");
+                        break;
+                }
+                boxContent = (BorderPane)box.getRoot();
+                pieceImg = new ImageView();
+                pieceImg.setImage(new Image(getClass().getResource(
+                                  "resources/pieces/" +
+                                          imagePath +
+                                          ".png").toString()));
+                boxContent.setCenter(pieceImg);
+
             }
-            else{
-                box.setText("");
-            }
-            box.setWrappingWidth(30);
-            box.setFont(Font.font ("Verdana", 20));
-            box.setTextAlignment(TextAlignment.CENTER);
-            
-            gridPaneBoard.add(box, column, row);
             
             
             final int x = row;
@@ -190,13 +201,13 @@ public class ViewController extends Application {
             }
         });*/
         
-        gridPaneBoard.setGridLinesVisible(true);
+        //gridPaneBoard.setGridLinesVisible(true);
         
         border.setCenter(gridPaneBoard);
         
-        Scene scene = new Scene(border, Color.LIGHTGREEN);
+        Scene scene = new Scene(border, Color.LIGHTBLUE);
         
-        primaryStage.setTitle("Calc FX");
+        primaryStage.setTitle("Jeu d'échec");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
