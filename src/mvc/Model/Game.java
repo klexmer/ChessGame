@@ -19,6 +19,7 @@ public class Game {
         this.black = new Player();
         this.board = new Board();
         activePlayer = white;
+        board.initBoard(white, black);
     }
 
     public Board getBoard() {

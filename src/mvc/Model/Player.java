@@ -10,5 +10,5 @@ package mvc.Model;
  * @author p1401687
  */
 public class Player {
-    
+
 }

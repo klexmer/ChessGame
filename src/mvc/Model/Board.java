@@ -21,9 +21,10 @@ public class Board {
             Appeler constructeur des differentes pieces
                 pieces[i][j] = new King(white);
         */
+        pieces[0][4] = new Queen(white);
     }
     
-    public Piece getPiece(int x,int y){
+    public Piece getPiece(int x, int y){
         return pieces[x][y];
     }
 }
