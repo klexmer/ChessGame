@@ -43,6 +43,7 @@ public class ViewController extends Application {
         Sinon, il devra en sélectrionner une.
     */
     private Piece selectedPiece = null;
+    private int selectedPieceIndex = -1;
     
     @Override
     public void start(Stage primaryStage) {
@@ -51,6 +52,15 @@ public class ViewController extends Application {
         game = new Game();
         // Initialisation de la grille
         gridPaneBoard = new GridPane();
+        
+        //Observeur s'adaptant aux mises à jour du plateau
+        /*game.getBoard().addObserver()(new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                
+            }
+        });*/
+        
         // Placement des pièces et création de leurs contrôleurs
         int column = 0;
         int row = 0;
@@ -107,8 +117,7 @@ public class ViewController extends Application {
                 boxContent.setCenter(pieceImg);
 
             }
-            
-            
+
             final int x = row;
             final int y = column;
             
@@ -121,87 +130,54 @@ public class ViewController extends Application {
             box.setOnMouseClicked(new EventHandler<MouseEvent>() {                   
                 @Override
                 public void handle(MouseEvent event) {
-                    selectedPiece = game.getBoard().getPiece(x, y);
-                    if(selectedPiece != null){
-                        Text box = (Text)gridPaneBoard.getChildren().get(x * 8 + y);
-                        box.setText(box.getText() + "-S");
-                        //Colorier les cases où la pièce peut aller
-                        Move moves[] = selectedPiece.getDeplacements(x, y);
-                        int xDest, yDest;
-                        Text boxDest;
-                        for(Move m : moves){
-                            xDest = m.getDestination().getX();
-                            yDest = m.getDestination().getY();
-                        }
+                    if(selectedPiece == null){
+                        selectPiece(x, y);
                     }
                     else{
-                        // ...
+                        /*Une pièce a été auparavant sélectionnée
+                        * Si la nouvelle case sélectionnée est une destination
+                        * valide pour la pièce sélectionnée, on la déplace à cet
+                        * endroit. Sinon, on déselectionne la pièce.*/
+                        //Vérification de la position de la case
+                        int rowSelectedPiece = selectedPieceIndex / 8;
+                        int columnSelectedPiece = selectedPieceIndex % 8;
+                        Move moves[] = selectedPiece.getDeplacements(rowSelectedPiece, columnSelectedPiece);
+                        int xDest, yDest, index;
+                        int indexMoves = 0;
+                        Move tempMove;
+                        boolean isAPossibleMove = false;
+                        do{
+                            tempMove = moves[indexMoves];
+                            xDest = tempMove.getDestination().getX();
+                            yDest = tempMove.getDestination().getY();
+                            index = xDest * 8 + yDest;
+                            if(x == xDest && y == yDest){
+                                isAPossibleMove = true;
+                            }
+                            indexMoves++;
+                        }while(indexMoves <= moves.length && !isAPossibleMove);
+                        if(isAPossibleMove){
+                            //La case est un mouvement possible:
+                            //déplacement de la pièce sur le plateau
+                            Point startPoint = new Point(rowSelectedPiece, columnSelectedPiece);
+                            Point destinationPoint = new Point(x, y);
+                            Move move = new Move(startPoint, destinationPoint);
+                            /*TODO : créer une fonction dans Board.java qui
+                            déplace une pièce sur le plateau. Paramètres:
+                            move : Move
+                            */
+                        }
+                        else{
+                            //Déselection de la pièce
+                            unselectPiece();
+                        }
                     }
-                }
-                
-            });
-            
-            
-            
+                }  
+            }); 
         }
         
-        // gestion du placement (permet de palcer le champ Text affichage en haut, et GridPane gPane au centre)
         BorderPane border = new BorderPane();
-        
-        // permet de placer les diffrents boutons dans une grille
-        
-        
-        /*affichage = new Text("");
-        affichage.setFont(Font.font ("Verdana", 20));
-        affichage.setFill(Color.RED);*/
-        //border.setTop(affichage);
-        
-        // la vue observe les "update" du modèle, et réalise les mises à jour graphiques
-        /*m.addObserver(new Observer() {
-            
-            @Override
-            public void update(Observable o, Object arg) {
-                if (!m.getErr()) {
-                    affichage.setText(m.getLastChange() + "");
-                    Text t = (Text)gPane.getChildren().get(m.getLastY()*8 + m.getLastX());
-                    t.setText(m.getLastChange());
-                } else {
-                    affichage.setText("Err");
-                }
-            }
-        });
-        
-        // on efface affichage lors du clic
-        affichage.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            
-            @Override
-            public void handle(MouseEvent event) {
-                affichage.setText("");
-            }
-            
-        });*/
-        
-       
-        
-        
-        
-        /*final Text t = new Text("=");
-        t.setWrappingWidth(30);
-        gPane.add(t, column++, row);
-        t.setTextAlignment(TextAlignment.CENTER);
-        //t.setEffect(new Shadow());
-        
-        // un controleur écoute le bouton "=" et déclenche l'appel du modèle
-        t.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            
-            @Override
-            public void handle(MouseEvent event) {
-                m.calc(affichage.getText());
-            }
-        });*/
-        
-        //gridPaneBoard.setGridLinesVisible(true);
-        
+        gridPaneBoard.setGridLinesVisible(true);
         border.setCenter(gridPaneBoard);
         
         Scene scene = new Scene(border, Color.LIGHTBLUE);
@@ -209,6 +185,52 @@ public class ViewController extends Application {
         primaryStage.setTitle("Jeu d'échec");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    
+    public void selectPiece(int x, int y){
+        selectedPiece = game.getBoard().getPiece(x, y);
+        if(selectedPiece != null){
+            selectedPieceIndex = x * 8 + y;
+            SubScene box = (SubScene)gridPaneBoard.getChildren().get(selectedPieceIndex);
+            box.setFill(Color.LIGHTBLUE);
+            //Colorier les cases où la pièce peut aller
+            changeColorOfPossibleDestinations(true, x, y);
+        }
+    }
+    
+    public void unselectPiece(){
+        SubScene box = (SubScene)gridPaneBoard.getChildren().get(selectedPieceIndex);
+        int row = selectedPieceIndex / 8;
+        int column = selectedPieceIndex % 8;
+        uncolorBox(box, row, column);
+        
+        changeColorOfPossibleDestinations(false, row, column);
+        selectedPiece = null;
+        selectedPieceIndex = -1;
+    }
+    
+    public void changeColorOfPossibleDestinations(boolean toggle, int x, int y){
+        Move moves[] = selectedPiece.getDeplacements(x, y);
+        int xDest, yDest, index;
+        SubScene boxDest;
+        for(Move m : moves){
+            xDest = m.getDestination().getX();
+            yDest = m.getDestination().getY();
+            index = xDest * 8 + yDest;
+            boxDest = (SubScene)gridPaneBoard.getChildren().get(index);
+            if(toggle == true)
+                boxDest.setFill(Color.LIGHTGREEN);
+            else{
+                uncolorBox(boxDest, xDest, yDest);
+            }
+        }
+    }
+    
+    public void uncolorBox(SubScene box, int x, int y){
+        if((x + y) % 2 == 0)
+            box.setFill(Color.SIENNA);
+        else
+            box.setFill(Color.BEIGE);
     }
 
     /**

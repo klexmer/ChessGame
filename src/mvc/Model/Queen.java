@@ -20,7 +20,7 @@ public class Queen extends Piece{
 
     @Override
     public Move[] getDeplacements(int x, int y) {
-        List moves = new ArrayList();
+        List<Move> moves = new ArrayList<>();
         
         for(int i = 1 ; i < 8 ; i++){
             if(x-i >0 && y-i>0)
@@ -39,8 +39,11 @@ public class Queen extends Piece{
                     moves.add(new Move(new Point(x, y),new Point(x-i, y-i)));
             if(x+i <8 && y+i<8)
                     moves.add(new Move(new Point(x, y),new Point(x-i, y-i)));
-        }    
-        return (Move[]) moves.toArray();
+        }
+
+        Move[] possibleMoves = new Move[moves.size()];
+        possibleMoves = moves.toArray(possibleMoves);
+        return possibleMoves;
     }
 
 }
