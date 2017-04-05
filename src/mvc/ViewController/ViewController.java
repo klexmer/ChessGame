@@ -54,10 +54,11 @@ public class ViewController extends Application {
         gridPaneBoard = new GridPane();
         
         //Observeur s'adaptant aux mises à jour du plateau
-        game.getBoard().addObserver()(new Observer() {
+        game.getBoard().addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
                 System.out.println("Un changement a eu lieu");
+                unselectPiece();
             }
         });
         
@@ -111,13 +112,11 @@ public class ViewController extends Application {
                 boxContent = (BorderPane)box.getRoot();
                 pieceImg = new ImageView();
                 imagePath = "/resources/pieces/" + imagePath + ".png";
-                System.out.println(imagePath);
                 pieceImg.setImage(new Image(getClass().getResource(
                                           imagePath).toString()));
                 pieceImg.setFitHeight(50);
                 pieceImg.setFitWidth(50);
                 boxContent.setCenter(pieceImg);
-
             }
 
             final int x = row;
@@ -161,7 +160,7 @@ public class ViewController extends Application {
                             //La case est un mouvement possible:
                             //déplacement de la pièce sur le plateau
                             Point destinationPoint = new Point(x, y);
-                            System.out.println("x: " + x + "y: " + y);
+                            System.out.println("x: " + x + ", y: " + y);
                             Move move = new Move(startPoint, destinationPoint);
                             game.getBoard().movePiece(move);
                         }
@@ -207,19 +206,22 @@ public class ViewController extends Application {
     }
     
     public void changeColorOfPossibleDestinations(boolean toggle, Point p){
-        
-        Move moves[] = game.getBoard().getPossibleMoves(selectedPoint);
-        Point destination;
-        int index;
         SubScene boxDest;
-        for(Move m : moves){
-            destination = new Point(m.getDestination().getX(), m.getDestination().getY());
-            index = (destination.getX() * 8) + destination.getY();
-            boxDest = (SubScene)gridPaneBoard.getChildren().get(index);
-            if(toggle == true)
+        if(toggle == true){
+            int index;
+            Move moves[] = game.getBoard().getPossibleMoves(selectedPoint);
+            Point destination;
+            for(Move m : moves){
+                destination = new Point(m.getDestination().getX(), m.getDestination().getY());
+                index = (destination.getX() * 8) + destination.getY();
+                boxDest = (SubScene)gridPaneBoard.getChildren().get(index);
                 boxDest.setFill(Color.LIGHTGREEN);
-            else{
-                uncolorBox(boxDest, destination);
+            }
+        }
+        else{
+            for(int i = 0; i < 64; i++){
+                boxDest = (SubScene)gridPaneBoard.getChildren().get(i);
+                uncolorBox(boxDest, new Point(i / 8, i % 8));
             }
         }
     }
