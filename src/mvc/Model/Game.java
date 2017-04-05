@@ -41,4 +41,12 @@ public class Game {
         return activePlayer;
     }
     
+    public boolean playGame(){
+        boolean possibleMoves = true;
+        while(possibleMoves){
+            
+        }
+        return false;
+    }
+    
 }

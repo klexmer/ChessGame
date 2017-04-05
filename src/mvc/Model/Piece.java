@@ -10,7 +10,7 @@ package mvc.Model;
  * @author p1401687
  */
 public abstract class Piece {
-    protected boolean living;
+    protected boolean living = true;
     protected Player owner;
 
     public Piece(Player owner) {
