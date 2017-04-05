@@ -68,8 +68,9 @@ public class ViewController extends Application {
         SubScene box;
         BorderPane boxContent;
         ImageView pieceImg;
-        String imagePath = "";
+        String imagePath;
         for (int i = 0; i < 64; i++) {
+            imagePath = "";
             gridPaneBoard.add(new SubScene(new BorderPane(), 50.0, 50.0),
                     column,
                     row);
@@ -110,6 +111,7 @@ public class ViewController extends Application {
                 boxContent = (BorderPane)box.getRoot();
                 pieceImg = new ImageView();
                 imagePath = "/resources/pieces/" + imagePath + ".png";
+                System.out.println(imagePath);
                 pieceImg.setImage(new Image(getClass().getResource(
                                           imagePath).toString()));
                 pieceImg.setFitHeight(50);
@@ -161,6 +163,7 @@ public class ViewController extends Application {
                             //déplacement de la pièce sur le plateau
                             Point startPoint = new Point(rowSelectedPiece, columnSelectedPiece);
                             Point destinationPoint = new Point(x, y);
+                            System.out.println("x: " + x + "y: " + y);
                             Move move = new Move(startPoint, destinationPoint);
                             /*TODO : créer une fonction dans Board.java qui
                             déplace une pièce sur le plateau. Paramètres:

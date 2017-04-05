@@ -1,0 +1,30 @@
+﻿edit 26374d7 First commit, project initialized
+edit 96e7e8b First commit, project initialized
+edit f27f9e3 MVC strict implemented
+pick 423ca4c First implementation of the model
+pick eefc0c3 Modifications on getDeplacements
+edit abbf368 Placement des pièces dans l'interface, et sélection des pièces
+edit 904943e The gridpane now contains subscene objects used to show the piece image and a background color. Pieces' images added to the project
+edit a5b1906 The gridpane now contains subscene objects used to show the piece image and a background color. Pieces' images added to the project
+pick 3ad4686 Modifications on getDeplacements
+edit eab64b1 Possible moves displayed on the board. The player can unselect a piece. The controller can detect when the player makes a possible move, and will tell it to the model (first we need to create a function in Board.java to move a piece). Started the construction of an observer to get the updates of the board.
+
+# Rebase a1b2c41..eab64b1 onto a1b2c41 (10 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+
