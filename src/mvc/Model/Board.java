@@ -28,7 +28,8 @@ public class Board {
         pieces[0][0] = new Rook(white);
     }
     
-    public Piece getPiece(int x, int y){
+    public Piece getPiece(Point p){
+        int x = p.getX(),y = p.getY();
         return pieces[x][y];
     }
     
@@ -37,10 +38,12 @@ public class Board {
         
         List<Move> moves = new ArrayList<>();
         for(Move m : this.pieces[x][y].getPossibleMoves(p)){
-            if(pieces[m.getDestination().getX()][m.getDestination().getY()] == null | pieces[m.getDestination().getX()][m.getDestination().getY()].owner == pieces[x][y].owner){
-                
-            }else{
+            if(pieces[m.getDestination().getX()][m.getDestination().getY()] == null){
                 moves.add(m);
+            }else{
+                if(pieces[m.getDestination().getX()][m.getDestination().getY()].owner != pieces[x][y].owner){
+                    moves.add(m);
+                }
             }
         }
         Move[] possibleMoves = new Move[moves.size()];
