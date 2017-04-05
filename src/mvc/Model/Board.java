@@ -7,12 +7,13 @@ package mvc.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  *
  * @author p1401687
  */
-public class Board {
+public class Board extends Observable{
     private Piece[][] pieces;
 
     public Board() {
@@ -50,5 +51,11 @@ public class Board {
         Move[] possibleMoves = new Move[moves.size()];
         possibleMoves = moves.toArray(possibleMoves);
         return possibleMoves;
+    }
+    
+    public void movePiece(Move m){
+        this.pieces[m.getDestination().getX()][m.getDestination().getY()] = this.pieces[m.getStart().getX()][m.getStart().getY()];
+        this.pieces[m.getStart().getX()][m.getStart().getY()] = null;
+        notifyObservers();
     }
 }
