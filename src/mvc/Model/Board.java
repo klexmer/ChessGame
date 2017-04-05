@@ -22,6 +22,7 @@ public class Board {
                 pieces[i][j] = new King(white);
         */
         pieces[0][4] = new Queen(white);
+        pieces[0][0] = new Rook(white);
     }
     
     public Piece getPiece(int x, int y){
