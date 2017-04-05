@@ -5,6 +5,9 @@
  */
 package mvc.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author p1401687
@@ -16,9 +19,31 @@ public class Knight extends Piece{
     }
 
     @Override
-    public Move[] getPossibleMoves(Point p){
-        int x = p.getX(),y = p.getY();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Move[] getPossibleMoves(Point startPoint){
+        int x = startPoint.getX(),y = startPoint.getY();
+        
+        List<Move> moves = new ArrayList<>();
+        
+        if(x-1 >=0 && y-2>=0)
+            moves.add(new Move(startPoint,new Point(x-1, y-2)));
+        if(x+1 < 8 && y-2>=0)
+            moves.add(new Move(startPoint,new Point(x+1, y-2)));
+        if(x-2 >=0 && y-1>=0)
+            moves.add(new Move(startPoint,new Point(x-1, y-1)));
+        if(x+2 < 8 && y-1>=0)
+            moves.add(new Move(startPoint,new Point(x-1, y-1)));
+        if(x-2 >=0 && y+1<8)
+            moves.add(new Move(startPoint,new Point(x-1, y+1)));
+        if(x+2<8 && y+1<8)
+            moves.add(new Move(startPoint,new Point(x-1, y+1)));
+        if(x-1>=0 && y+2<8)
+            moves.add(new Move(startPoint,new Point(x-1, y+2)));
+        if(x+1 <8 && y+2<8)
+            moves.add(new Move(startPoint,new Point(x-1, y+2)));
+        
+        Move[] possibleMoves = new Move[moves.size()];
+        possibleMoves = moves.toArray(possibleMoves);
+        return possibleMoves;
     }
 
 }
