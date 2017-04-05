@@ -28,7 +28,8 @@ public class Board {
         pieces[0][0] = new Rook(white);
     }
     
-    public Piece getPiece(int x, int y){
+    public Piece getPiece(Point p){
+        int x = p.getX(), y = p.getY();
         return pieces[x][y];
     }
     
