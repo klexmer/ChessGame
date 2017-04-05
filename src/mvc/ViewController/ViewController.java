@@ -54,12 +54,12 @@ public class ViewController extends Application {
         gridPaneBoard = new GridPane();
         
         //Observeur s'adaptant aux mises à jour du plateau
-        /*game.getBoard().addObserver()(new Observer() {
+        game.getBoard().addObserver()(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
-                
+                System.out.println("Un changement a eu lieu");
             }
-        });*/
+        });
         
         // Placement des pièces et création de leurs contrôleurs
         int column = 0;
@@ -163,10 +163,7 @@ public class ViewController extends Application {
                             Point destinationPoint = new Point(x, y);
                             System.out.println("x: " + x + "y: " + y);
                             Move move = new Move(startPoint, destinationPoint);
-                            /*TODO : créer une fonction dans Board.java qui
-                            déplace une pièce sur le plateau. Paramètres:
-                            move : Move
-                            */
+                            game.getBoard().movePiece(move);
                         }
                         else{
                             //Déselection de la pièce
@@ -189,8 +186,8 @@ public class ViewController extends Application {
     }
     
     public void selectPiece(int x, int y){
-        selectedPoint = new Point(x, y);
-        if(game.getBoard().getPiece(selectedPoint) != null){
+        if(game.getBoard().getPiece(new Point(x, y)) != null){
+            selectedPoint = new Point(x, y);
             selectedPieceIndex = x * 8 + y;
             SubScene box = (SubScene)gridPaneBoard.getChildren().get(selectedPieceIndex);
             box.setFill(Color.LIGHTBLUE);
