@@ -39,6 +39,7 @@ public class Board extends Observable{
         int x = p.getX(),y = p.getY();
         
         List<Move> moves = new ArrayList<>();
+        System.out.println("x: " + x + ", y : " + y);
         for(Move m : this.pieces[x][y].getPossibleMoves(p)){
             if(pieces[m.getDestination().getX()][m.getDestination().getY()] == null){
                 moves.add(m);
