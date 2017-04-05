@@ -19,21 +19,22 @@ public class Queen extends Piece{
     }
 
     @Override
-    public Move[] getDeplacements(int x, int y) {
+    public Move[] getPossibleMoves(Point p){
+        int x = p.getX(),y = p.getY();
         List<Move> moves = new ArrayList<>();
         
         for(int i = 1 ; i < 8 ; i++){
-            if(x-i >0 && y-i>0)
+            if(x-i >=0 && y-i>=0)
                     moves.add(new Move(new Point(x, y),new Point(x-i, y-i)));
-            if(x-i >0)
+            if(x-i >=0)
                     moves.add(new Move(new Point(x, y),new Point(x-i, y)));
-            if(x-i >0 && y+i<8)
+            if(x-i >=0 && y+i<8)
                     moves.add(new Move(new Point(x, y),new Point(x-i, y+i)));
-            if(y-i>0)
+            if(y-i>=0)
                     moves.add(new Move(new Point(x, y),new Point(x, y-i)));
             if(y+i<8)
                     moves.add(new Move(new Point(x, y),new Point(x, y+i)));
-            if(x+i <8 && y-i>0)
+            if(x+i <8 && y-i>=0)
                     moves.add(new Move(new Point(x, y),new Point(x+i, y-i)));
             if(x+i <8)
                     moves.add(new Move(new Point(x, y),new Point(x+i, y)));

@@ -21,7 +21,8 @@ public class Pawn extends Piece{
     }
 
     @Override
-    public Move[] getDeplacements(int x, int y) {
+    public Move[] getPossibleMoves(Point p){
+        int x = p.getX(),y = p.getY();
         List moves = new ArrayList();
         if(owner.isWhite()){
             

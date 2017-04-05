@@ -26,5 +26,12 @@ public class Move {
     public Point getDestination() {
         return destination;
     }
+
+    @Override
+    public String toString() {
+        return "Move{" + "start=" + start + ", destination=" + destination + '}';
+    }
+    
+    
     
 }

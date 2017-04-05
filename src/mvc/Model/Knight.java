@@ -16,7 +16,8 @@ public class Knight extends Piece{
     }
 
     @Override
-    public Move[] getDeplacements(int x, int y) {
+    public Move[] getPossibleMoves(Point p){
+        int x = p.getX(),y = p.getY();
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

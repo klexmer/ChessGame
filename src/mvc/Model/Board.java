@@ -5,6 +5,9 @@
  */
 package mvc.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author p1401687
@@ -27,5 +30,21 @@ public class Board {
     
     public Piece getPiece(int x, int y){
         return pieces[x][y];
+    }
+    
+    public Move[] getPossibleMoves(Point p){
+        int x = p.getX(),y = p.getY();
+        
+        List<Move> moves = new ArrayList<>();
+        for(Move m : this.pieces[x][y].getPossibleMoves(p)){
+            if(pieces[m.getDestination().getX()][m.getDestination().getY()] == null | pieces[m.getDestination().getX()][m.getDestination().getY()].owner == pieces[x][y].owner){
+                
+            }else{
+                moves.add(m);
+            }
+        }
+        Move[] possibleMoves = new Move[moves.size()];
+        possibleMoves = moves.toArray(possibleMoves);
+        return possibleMoves;
     }
 }

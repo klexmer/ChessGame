@@ -29,5 +29,5 @@ public abstract class Piece {
         return owner;
     }
         
-    public abstract Move[] getDeplacements(int x,int y);
+    public abstract Move[] getPossibleMoves(Point p);
 }

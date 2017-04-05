@@ -19,20 +19,24 @@ public class Rook extends Piece{
     }
 
     @Override
-    public Move[] getDeplacements(int x, int y) {
-        List moves = new ArrayList();
+    public Move[] getPossibleMoves(Point p){
+        int x = p.getX(),y = p.getY();
+        List<Move> moves = new ArrayList<>();
         
         for(int i = 1 ; i < 8 ; i++){
-            if(x-i >0)
+            if(x-i >=0)
                     moves.add(new Move(new Point(x, y),new Point(x-i, y)));
-            if(y-i>0)
+            if(y-i>=0)
                     moves.add(new Move(new Point(x, y),new Point(x, y-i)));
             if(y+i<8)
                     moves.add(new Move(new Point(x, y),new Point(x, y+i)));
             if(x+i <8)
-                    moves.add(new Move(new Point(x, y),new Point(x-i, y-i)));
-        }    
-        return (Move[]) moves.toArray();
+                    moves.add(new Move(new Point(x, y),new Point(x+i, y)));
+        }
+
+        Move[] possibleMoves = new Move[moves.size()];
+        possibleMoves = moves.toArray(possibleMoves);
+        return possibleMoves;
     }
 
 
