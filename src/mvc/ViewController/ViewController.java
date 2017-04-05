@@ -42,7 +42,7 @@ public class ViewController extends Application {
         destination de la pièce sélectionnée.
         Sinon, il devra en sélectrionner une.
     */
-    private Piece selectedPiece = null;
+    private Point selectedPoint = null;
     private int selectedPieceIndex = -1;
     
     @Override
@@ -132,7 +132,7 @@ public class ViewController extends Application {
             box.setOnMouseClicked(new EventHandler<MouseEvent>() {                   
                 @Override
                 public void handle(MouseEvent event) {
-                    if(selectedPiece == null){
+                    if(selectedPoint == null){
                         selectPiece(x, y);
                     }
                     else{
@@ -141,27 +141,25 @@ public class ViewController extends Application {
                         * valide pour la pièce sélectionnée, on la déplace à cet
                         * endroit. Sinon, on déselectionne la pièce.*/
                         //Vérification de la position de la case
-                        int rowSelectedPiece = selectedPieceIndex / 8;
-                        int columnSelectedPiece = selectedPieceIndex % 8;
-                        Move moves[] = selectedPiece.getDeplacements(rowSelectedPiece, columnSelectedPiece);
-                        int xDest, yDest, index;
+                        Point startPoint = new Point(selectedPieceIndex / 8, selectedPieceIndex % 8);
+                        Move moves[] = game.getBoard().getPossibleMoves(selectedPoint);
+                        Point destination;
+                        int index;
                         int indexMoves = 0;
                         Move tempMove;
                         boolean isAPossibleMove = false;
                         do{
                             tempMove = moves[indexMoves];
-                            xDest = tempMove.getDestination().getX();
-                            yDest = tempMove.getDestination().getY();
-                            index = xDest * 8 + yDest;
-                            if(x == xDest && y == yDest){
+                            destination = new Point(tempMove.getDestination().getX(), tempMove.getDestination().getY());
+                            index = destination.getX() * 8 + destination.getY();
+                            if(x == destination.getX() && y == destination.getY()){
                                 isAPossibleMove = true;
                             }
                             indexMoves++;
-                        }while(indexMoves <= moves.length && !isAPossibleMove);
+                        }while(indexMoves < moves.length && !isAPossibleMove);
                         if(isAPossibleMove){
                             //La case est un mouvement possible:
                             //déplacement de la pièce sur le plateau
-                            Point startPoint = new Point(rowSelectedPiece, columnSelectedPiece);
                             Point destinationPoint = new Point(x, y);
                             System.out.println("x: " + x + "y: " + y);
                             Move move = new Move(startPoint, destinationPoint);
@@ -191,46 +189,46 @@ public class ViewController extends Application {
     }
     
     public void selectPiece(int x, int y){
-        selectedPiece = game.getBoard().getPiece(x, y);
-        if(selectedPiece != null){
+        selectedPoint = new Point(x, y);
+        if(game.getBoard().getPiece(selectedPoint) != null){
             selectedPieceIndex = x * 8 + y;
             SubScene box = (SubScene)gridPaneBoard.getChildren().get(selectedPieceIndex);
             box.setFill(Color.LIGHTBLUE);
             //Colorier les cases où la pièce peut aller
-            changeColorOfPossibleDestinations(true, x, y);
+            changeColorOfPossibleDestinations(true, selectedPoint);
         }
     }
     
     public void unselectPiece(){
         SubScene box = (SubScene)gridPaneBoard.getChildren().get(selectedPieceIndex);
-        int row = selectedPieceIndex / 8;
-        int column = selectedPieceIndex % 8;
-        uncolorBox(box, row, column);
+        Point p = new Point(selectedPieceIndex / 8, selectedPieceIndex % 8);
+        uncolorBox(box, p);
         
-        changeColorOfPossibleDestinations(false, row, column);
-        selectedPiece = null;
+        changeColorOfPossibleDestinations(false, p);
+        selectedPoint = null;
         selectedPieceIndex = -1;
     }
     
-    public void changeColorOfPossibleDestinations(boolean toggle, int x, int y){
-        Move moves[] = selectedPiece.getDeplacements(x, y);
-        int xDest, yDest, index;
+    public void changeColorOfPossibleDestinations(boolean toggle, Point p){
+        
+        Move moves[] = game.getBoard().getPossibleMoves(selectedPoint);
+        Point destination;
+        int index;
         SubScene boxDest;
         for(Move m : moves){
-            xDest = m.getDestination().getX();
-            yDest = m.getDestination().getY();
-            index = xDest * 8 + yDest;
+            destination = new Point(m.getDestination().getX(), m.getDestination().getY());
+            index = (destination.getX() * 8) + destination.getY();
             boxDest = (SubScene)gridPaneBoard.getChildren().get(index);
             if(toggle == true)
                 boxDest.setFill(Color.LIGHTGREEN);
             else{
-                uncolorBox(boxDest, xDest, yDest);
+                uncolorBox(boxDest, destination);
             }
         }
     }
     
-    public void uncolorBox(SubScene box, int x, int y){
-        if((x + y) % 2 == 0)
+    public void uncolorBox(SubScene box, Point p){
+        if((p.getX() + p.getY()) % 2 == 0)
             box.setFill(Color.SIENNA);
         else
             box.setFill(Color.BEIGE);
