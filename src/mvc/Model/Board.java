@@ -86,7 +86,7 @@ public class Board extends Observable implements Cloneable{
         Board clonedBoard = new Board();
         for(int x = 0; x < pieces.length; x++){
             for(int y = 0; y < pieces[x].length; y++){
-                clonedBoard.pieces[x][y] = new Piece(this.pieces[x][y].getOwner());
+                //clonedBoard.pieces[x][y] = new Piece(this.pieces[x][y].getOwner());
             }
         }
         return null;
