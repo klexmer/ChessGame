@@ -36,9 +36,9 @@ public class Queen extends Piece{
             if(x+i <8 && y-i>0)
                     moves.add(new Move(new Point(x, y),new Point(x+i, y-i)));
             if(x+i <8)
-                    moves.add(new Move(new Point(x, y),new Point(x-i, y-i)));
+                    moves.add(new Move(new Point(x, y),new Point(x+i, y)));
             if(x+i <8 && y+i<8)
-                    moves.add(new Move(new Point(x, y),new Point(x-i, y-i)));
+                    moves.add(new Move(new Point(x, y),new Point(x+i, y+i)));
         }
 
         Move[] possibleMoves = new Move[moves.size()];
