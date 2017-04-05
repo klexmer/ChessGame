@@ -77,11 +77,11 @@ public class ViewController extends Application {
             box = (SubScene)gridPaneBoard.getChildren().get(row * 8 + column);
             
             if((column + row) % 2 == 0)
-                box.setFill(Color.SIENNA);
-            else
                 box.setFill(Color.BEIGE);
-            if(game.getBoard().getPiece(row, column) != null){
-                p = game.getBoard().getPiece(row, column);
+            else
+                box.setFill(Color.SIENNA);
+            if(game.getBoard().getPiece(new Point(row, column)) != null){
+                p = game.getBoard().getPiece(new Point(row, column));
                 //Couleur de la pièce
                 if(p.getOwner().isWhite())
                     imagePath += "white_";
@@ -229,9 +229,9 @@ public class ViewController extends Application {
     
     public void uncolorBox(SubScene box, Point p){
         if((p.getX() + p.getY()) % 2 == 0)
-            box.setFill(Color.SIENNA);
-        else
             box.setFill(Color.BEIGE);
+        else
+            box.setFill(Color.SIENNA);
     }
 
     /**

@@ -30,6 +30,7 @@ public class Board {
     
     public Piece getPiece(Point p){
         int x = p.getX(),y = p.getY();
+
         return pieces[x][y];
     }
     
