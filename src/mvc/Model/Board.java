@@ -61,11 +61,19 @@ public class Board extends Observable implements Cloneable{
         
         List<Move> moves = new ArrayList<>();
         for(Move m : this.pieces[x][y].getPossibleMoves(p)){
-            if(pieces[m.getDestination().getX()][m.getDestination().getY()] == null){
-                moves.add(m);
-            }else{
-                if(pieces[m.getDestination().getX()][m.getDestination().getY()].owner != pieces[x][y].owner){
+            boolean isPossible = true;
+            for(Point i : m.getIntermediatePoints()){
+                if(pieces[i.getX()][i.getY()] != null){
+                    isPossible = false;
+                }
+            }
+            if(isPossible){
+                if(pieces[m.getDestination().getX()][m.getDestination().getY()] == null){
                     moves.add(m);
+                }else{
+                    if(pieces[m.getDestination().getX()][m.getDestination().getY()].owner != pieces[x][y].owner){
+                        moves.add(m);
+                    }
                 }
             }
         }

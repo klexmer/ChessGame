@@ -25,21 +25,21 @@ public class Knight extends Piece{
         List<Move> moves = new ArrayList<>();
         
         if(x-1 >=0 && y-2>=0)
-            moves.add(new Move(startPoint,new Point(x-1, y-2)));
+            moves.add(new Move(startPoint,new Point(x-1, y-2),Move.Direction.NONE));
         if(x+1 < 8 && y-2>=0)
-            moves.add(new Move(startPoint,new Point(x+1, y-2)));
+            moves.add(new Move(startPoint,new Point(x+1, y-2),Move.Direction.NONE));
         if(x-2 >=0 && y-1>=0)
-            moves.add(new Move(startPoint,new Point(x-1, y-1)));
+            moves.add(new Move(startPoint,new Point(x-2, y-1),Move.Direction.NONE));
         if(x+2 < 8 && y-1>=0)
-            moves.add(new Move(startPoint,new Point(x-1, y-1)));
+            moves.add(new Move(startPoint,new Point(x+2, y-1),Move.Direction.NONE));
         if(x-2 >=0 && y+1<8)
-            moves.add(new Move(startPoint,new Point(x-1, y+1)));
+            moves.add(new Move(startPoint,new Point(x-2, y+1),Move.Direction.NONE));
         if(x+2<8 && y+1<8)
-            moves.add(new Move(startPoint,new Point(x-1, y+1)));
+            moves.add(new Move(startPoint,new Point(x+2, y+1),Move.Direction.NONE));
         if(x-1>=0 && y+2<8)
-            moves.add(new Move(startPoint,new Point(x-1, y+2)));
+            moves.add(new Move(startPoint,new Point(x-1, y+2),Move.Direction.NONE));
         if(x+1 <8 && y+2<8)
-            moves.add(new Move(startPoint,new Point(x-1, y+2)));
+            moves.add(new Move(startPoint,new Point(x+1, y+2),Move.Direction.NONE));
         
         Move[] possibleMoves = new Move[moves.size()];
         possibleMoves = moves.toArray(possibleMoves);

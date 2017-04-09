@@ -14,7 +14,6 @@ import java.util.List;
  */
 public class Pawn extends Piece{
 
-    private boolean firstMove = true;
     
     public Pawn(Player owner) {
         super(owner);
@@ -23,14 +22,30 @@ public class Pawn extends Piece{
     @Override
     public Move[] getPossibleMoves(Point p){
         int x = p.getX(),y = p.getY();
-        List moves = new ArrayList();
+        List<Move> moves = new ArrayList<>();
         if(owner.isWhite()){
-            
+            if(x==6){
+                Point[] t = {new Point(x-1,y),new Point(x-2, y)};
+                moves.add(new Move(p,new Point(x-2,y),t));
+            }
+            if(x-1>=0){
+                Point[] t = {new Point(x-1,y)};
+                moves.add(new Move(p,new Point(x-1,y),t));
+            }
         }else{
-            
+            if(x==1){
+                Point[] t = {new Point(x+1,y),new Point(x+2, y)};
+                moves.add(new Move(p,new Point(x+2,y),t));
+            }
+            if(x+1<8){
+                Point[] t = {new Point(x+1,y)};
+                moves.add(new Move(p,new Point(x+1,y),t));            
+            }
         }
         
-        return (Move[]) moves.toArray();
+        Move[] possibleMoves = new Move[moves.size()];
+        possibleMoves = moves.toArray(possibleMoves);
+        return possibleMoves;
     }
 
 
