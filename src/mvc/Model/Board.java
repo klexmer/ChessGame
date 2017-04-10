@@ -48,6 +48,7 @@ public class Board extends Observable{
         for(int i =0;i<8;i++){
             pieces[6][i] = new Pawn(white);
         }
+        notifyObservers();
     }
     
     public Piece getPiece(Point p){
