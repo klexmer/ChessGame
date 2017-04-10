@@ -13,7 +13,7 @@ import java.util.Observable;
  *
  * @author p1401687
  */
-public class Board extends Observable implements Cloneable{
+public class Board extends Observable{
     private Piece[][] pieces;
 
     public Board() {
@@ -48,6 +48,7 @@ public class Board extends Observable implements Cloneable{
         for(int i =0;i<8;i++){
             pieces[6][i] = new Pawn(white);
         }
+        notifyObservers();
     }
     
     public Piece getPiece(Point p){
@@ -83,20 +84,9 @@ public class Board extends Observable implements Cloneable{
     }
     
     public void movePiece(Move m){
-        System.out.println("Je viens ici");
         this.pieces[m.getDestination().getX()][m.getDestination().getY()] = this.pieces[m.getStart().getX()][m.getStart().getY()];
         this.pieces[m.getStart().getX()][m.getStart().getY()] = null;
         setChanged();
         notifyObservers();
-    }
-    
-    public Object Clone(){
-        Board clonedBoard = new Board();
-        for(int x = 0; x < pieces.length; x++){
-            for(int y = 0; y < pieces[x].length; y++){
-                //clonedBoard.pieces[x][y] = new Piece(this.pieces[x][y].getOwner());
-            }
-        }
-        return null;
     }
 }
