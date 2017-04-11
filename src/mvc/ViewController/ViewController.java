@@ -9,6 +9,8 @@ import java.util.Observer;
 import javafx.application.Application;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -16,9 +18,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -29,6 +35,8 @@ public class ViewController extends Application {
     
     private Game game;
     private GridPane gridPaneBoard;
+    private TilePane informationsTilePane;
+    private Text turnDisplay;
     /*
         Si la pièce est sélectionnée, le prochain clic déterminera la case
         destination de la pièce sélectionnée.
@@ -54,11 +62,30 @@ public class ViewController extends Application {
             }
         });
         
+        //Observeur regardant les informations du jeu
+        game.getBoard().addObserver(new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                changePlayerTurn();
+            }
+        });
+        
         updateGridPane();
         
         BorderPane border = new BorderPane();
         //gridPaneBoard.setGridLinesVisible(true);
         border.setCenter(gridPaneBoard);
+        
+        turnDisplay = new Text("");
+        turnDisplay.setFont(Font.font ("Verdana", 20));
+        informationsTilePane = new TilePane();
+        changePlayerTurn();
+        informationsTilePane.setHgap(10);
+        informationsTilePane.setPrefSize(250, 80);
+        informationsTilePane.setPadding(new Insets(10, 10, 10, 10));
+        informationsTilePane.setTileAlignment(Pos.TOP_LEFT);
+        
+        border.setRight(informationsTilePane);
         
         Scene scene = new Scene(border, Color.LIGHTBLUE);
         
@@ -68,7 +95,8 @@ public class ViewController extends Application {
     }
     
     public void selectPiece(int x, int y){
-        if(game.getBoard().getPiece(new Point(x, y)) != null){
+        Piece p = game.getBoard().getPiece(new Point(x, y));
+        if(p != null && p.getOwner() == game.getActivePlayer()){
             selectedPoint = new Point(x, y);
             selectedPieceIndex = x * 8 + y;
             SubScene box = (SubScene)gridPaneBoard.getChildren().get(selectedPieceIndex);
@@ -203,20 +231,24 @@ public class ViewController extends Application {
                         int indexMoves = 0;
                         Move tempMove;
                         boolean isAPossibleMove = false;
-                        do{
-                            tempMove = moves[indexMoves];
-                            destination = new Point(tempMove.getDestination().getX(), tempMove.getDestination().getY());
-                            index = destination.getX() * 8 + destination.getY();
-                            if(x == destination.getX() && y == destination.getY()){
-                                isAPossibleMove = true;
-                            }
-                            indexMoves++;
-                        }while(indexMoves < moves.length && !isAPossibleMove);
+                        if(moves.length != 0)
+                        {
+                            do{
+                                tempMove = moves[indexMoves];
+                                destination = new Point(tempMove.getDestination().getX(), tempMove.getDestination().getY());
+                                index = destination.getX() * 8 + destination.getY();
+                                if(x == destination.getX() && y == destination.getY()){
+                                    isAPossibleMove = true;
+                                }
+                                indexMoves++;
+                            }while(indexMoves < moves.length && !isAPossibleMove);
+                        }
                         if(isAPossibleMove){
                             //La case est un mouvement possible:
                             //déplacement de la pièce sur le plateau
                             Point destinationPoint = new Point(x, y);
-                            Move move = new Move(startPoint, destinationPoint);
+                            Move move = new Move(startPoint, destinationPoint, Move.Direction.NONE);
+                            game.nextPlayerTurn();
                             game.getBoard().movePiece(move);
                         }
                         else{
@@ -234,6 +266,17 @@ public class ViewController extends Application {
             box.setFill(Color.BEIGE);
         else
             box.setFill(Color.SIENNA);
+    }
+    
+    public void changePlayerTurn(){
+        String joueurActuel;
+        if(game.getActivePlayer().isWhite())
+            joueurActuel = "blancs";
+        else
+            joueurActuel = "noirs";
+        turnDisplay.setText("Le tour est aux " + joueurActuel);
+        informationsTilePane.getChildren().clear();
+        informationsTilePane.getChildren().add(turnDisplay);
     }
 
     /**

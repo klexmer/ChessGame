@@ -37,7 +37,7 @@ public class Game {
             activePlayer = white;
     }
     
-    public Player getAcivePlayer(){
+    public Player getActivePlayer(){
         return activePlayer;
     }
     
