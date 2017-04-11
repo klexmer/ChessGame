@@ -63,10 +63,16 @@ public class Board extends Observable{
         List<Move> moves = new ArrayList<>();
         for(Move m : this.pieces[x][y].getPossibleMoves(p)){
             boolean isPossible = true;
-            for(Point i : m.getIntermediatePoints()){
-                if(pieces[i.getX()][i.getY()] != null){
-                    isPossible = false;
+            //System.out.println(m);
+            if(m.getIntermediatePoints() != null){
+                for(Point i : m.getIntermediatePoints()){
+                    //System.out.println(i);
+                    if(pieces[i.getX()][i.getY()] != null){
+                        isPossible = false;
+                    }
                 }
+            }else{
+                //System.out.println("Est null");
             }
             if(isPossible){
                 if(pieces[m.getDestination().getX()][m.getDestination().getY()] == null){

@@ -34,71 +34,79 @@ public class Move {
         this.start = start;
         this.destination = destination;
         
+        if(d != Direction.NONE){
         Point p;
         List<Point> inter = new ArrayList<>();
         switch(d){
             case LEFT_UP_DIAGONAL :
                 p = new Point(start.getX()-1, start.getY()-1);
-                while(p != destination){
+                while(p.getX() != destination.getX() || p.getY() != destination.getY()){
                     inter.add(p);
                     p = new Point(p.getX()-1, p.getY()-1);
                 }
                 break;
             case LEFT_DOWN_DIAGONAL:
                 p = new Point(start.getX()+1, start.getY()-1);
-                while(p != destination){
+                while(p.getX() != destination.getX() || p.getY() != destination.getY()){
                     inter.add(p);
                     p = new Point(p.getX()+1, p.getY()-1);
                 }
                 break;
             case RIGHT_UP_DIAGONAL:
                 p = new Point(start.getX()-1, start.getY()+1);
-                while(p != destination){
+                while(p.getX() != destination.getX() || p.getY() != destination.getY()){
                     inter.add(p);
                     p = new Point(p.getX()-1, p.getY()+1);
                 }
                 break;   
             case RIGHT_DOWN_DIAGONAL:
                 p = new Point(start.getX()+1, start.getY()+1);
-                while(p != destination){
+                while(p.getX() != destination.getX() || p.getY() != destination.getY()){
                     inter.add(p);
                     p = new Point(p.getX()+1, p.getY()+1);
                 }
                 break;
             case LEFT:
                 p = new Point(start.getX(), start.getY()-1);
-                while(p != destination){
+                while(p.getX() != destination.getX() || p.getY() != destination.getY()){
                     inter.add(p);
                     p = new Point(p.getX(), p.getY()-1);
                 }                
                 break;
             case RIGHT:
                 p = new Point(start.getX(), start.getY()+1);
-                while(p != destination){
+                while(p.getX() != destination.getX() || p.getY() != destination.getY()){
                     inter.add(p);
                     p = new Point(p.getX(), p.getY()+1);
                 }
                 break;
             case UP:
+                System.out.println("Couocu");
                 p = new Point(start.getX()-1, start.getY());
-                while(p != destination){
+                System.out.println("p = " + p + " Destination = " + this.destination);
+                while(p.getX() != destination.getX() || p.getY() != destination.getY()){
+                    System.out.println(p);
                     inter.add(p);
                     p = new Point(p.getX()-1, p.getY());
                 }
                 break;
             case DOWN:
                 p = new Point(start.getX()+1, start.getY());
-                while(p != destination){
+                while(p.getX() != destination.getX() || p.getY() != destination.getY()){
                     inter.add(p);
                     p = new Point(p.getX()+1, p.getY());
                 }
                 break;
-            case NONE:
-                break;
         }
         
-        Point[] intermediatePoints = new Point[inter.size()];
-        intermediatePoints = inter.toArray(intermediatePoints);
+        Point[] intermediate = new Point[inter.size()];
+        intermediatePoints = inter.toArray(intermediate);
+        for(Point i : intermediatePoints)
+                System.out.println(i);
+        }else{
+            System.out.println("NONE");
+            intermediatePoints = null;
+        }
     }
 
     public Move(Point start, Point destination, Point[] intermediatePoints) {
