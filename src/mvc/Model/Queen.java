@@ -47,4 +47,9 @@ public class Queen extends Piece{
         return possibleMoves;
     }
 
+    @Override
+    public String toString() {
+        return "Queen";
+    }
+
 }

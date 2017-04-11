@@ -38,7 +38,8 @@ public class ViewController extends Application {
     private Game game;
     private GridPane gridPaneBoard;
     private TilePane informationsTilePane;
-    private Text turnDisplay;
+    private Text playerTurnText;
+    private Text gameStateText;
     private Stage mainWindow;
     /*
         Si la pièce est sélectionnée, le prochain clic déterminera la case
@@ -70,8 +71,19 @@ public class ViewController extends Application {
         game.addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
-                changePlayerTurn();
-                if(game.getEndOfGame() != "false"){
+                changePlayerTurn();              
+                if(game.getState() == "check"){
+                    gameStateText.setText("Echec");
+                    informationsTilePane.getChildren().remove(1);
+                    informationsTilePane.getChildren().add(1, gameStateText);
+                    game.checkCheckmate();
+                }
+                else if(game.getState() == "normal"){
+                    gameStateText.setText("");
+                    informationsTilePane.getChildren().remove(1);
+                    informationsTilePane.getChildren().add(1, gameStateText);
+                }
+                else{
                     showEndOfGameDialog();
                 }
             }
@@ -83,17 +95,21 @@ public class ViewController extends Application {
         //gridPaneBoard.setGridLinesVisible(true);
         border.setCenter(gridPaneBoard);
         
-        turnDisplay = new Text("Le tour est aux blancs");
-        turnDisplay.setFont(Font.font ("Verdana", 20));
+        playerTurnText = new Text("Le tour est aux blancs");
+        playerTurnText.setFont(Font.font ("Verdana", 20));
         informationsTilePane = new TilePane();
-        informationsTilePane.getChildren().add(0, turnDisplay);
+        informationsTilePane.getChildren().add(0, playerTurnText);
         informationsTilePane.setVgap(30);
         informationsTilePane.setPrefSize(250, 80);
         informationsTilePane.setPadding(new Insets(10, 10, 10, 10));
         informationsTilePane.setTileAlignment(Pos.TOP_CENTER);
         
+        gameStateText = new Text("");
+        gameStateText.setFont(Font.font ("Verdana", 20));
+        informationsTilePane.getChildren().add(1, gameStateText);
         
         Text surrenderText = new Text("Déclarer forfait");
+        surrenderText.setFont(Font.font ("Verdana", 15));
         HBox backgroundSurrenderHBox = new HBox();
         backgroundSurrenderHBox.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
@@ -105,7 +121,7 @@ public class ViewController extends Application {
         backgroundSurrenderHBox.setBackground(Background.EMPTY);
         backgroundSurrenderHBox.setStyle("-fx-background-color: white");
         backgroundSurrenderHBox.getChildren().add(surrenderText);
-        informationsTilePane.getChildren().add(1, backgroundSurrenderHBox);
+        informationsTilePane.getChildren().add(2, backgroundSurrenderHBox);
         
         //javafx.scene.control.Button surrenderButton = new javafx.scene.control.Button();
         //informationsTilePane.getChildren().add(0, turnDisplay);
@@ -147,11 +163,16 @@ public class ViewController extends Application {
             int index;
             Move moves[] = game.getBoard().getPossibleMoves(selectedPoint);
             Point destination;
+            boolean noCheck = false;
             for(Move m : moves){
                 destination = new Point(m.getDestination().getX(), m.getDestination().getY());
                 index = (destination.getX() * 8) + destination.getY();
                 boxDest = (SubScene)gridPaneBoard.getChildren().get(index);
-                boxDest.setFill(Color.LIGHTGREEN);
+                noCheck  = game.checkIfMovePossible(m);
+                if(noCheck)
+                    boxDest.setFill(Color.LIGHTGREEN);
+                else
+                    boxDest.setFill(Color.LIGHTSALMON);
             }
         }
         else{
@@ -273,8 +294,12 @@ public class ViewController extends Application {
                             //déplacement de la pièce sur le plateau
                             Point destinationPoint = new Point(x, y);
                             Move move = new Move(startPoint, destinationPoint, Move.Direction.NONE);
-                            game.nextPlayerTurn();
-                            game.getBoard().movePiece(move);
+                            boolean noCheck =  game.checkIfMovePossible(move);
+                            if(noCheck == true){
+                                game.getBoard().movePiece(move, false);
+                                game.nextPlayerTurn();
+                                game.checkCheck(false);
+                            }
                         }
                         else{
                             //Déselection de la pièce
@@ -298,13 +323,19 @@ public class ViewController extends Application {
         if(game.getActivePlayer().isWhite())
             joueurActuel = "blancs";
         else
-            joueurActuel = "noirs";
-        turnDisplay.setText("Le tour est aux " + joueurActuel);
+            joueurActuel = "noirs  ";
+        playerTurnText.setText("Le tour est aux " + joueurActuel);
         informationsTilePane.getChildren().remove(0);
-        informationsTilePane.getChildren().add(0, turnDisplay);
+        informationsTilePane.getChildren().add(0, playerTurnText);
     }
     
     public void showEndOfGameDialog(){
+        if(game.getState() == "checkmate")
+            gameStateText.setText("Echec et mat");
+        else
+            gameStateText.setText("Abandon");
+        informationsTilePane.getChildren().remove(1);
+        informationsTilePane.getChildren().add(1, gameStateText);
         final Stage dialog = new Stage(StageStyle.TRANSPARENT);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(mainWindow);
@@ -320,7 +351,7 @@ public class ViewController extends Application {
         else
             result += "noir";
         result += " a ";
-        if(game.getEndOfGame() == "checkmate")
+        if(game.getState() == "checkmate")
             result += "perdu";
         else
             result += "déclaré forfait";
@@ -336,6 +367,9 @@ public class ViewController extends Application {
             @Override
             public void handle(MouseEvent event) {
                 game.restartGame();
+                gameStateText.setText("");
+                informationsTilePane.getChildren().remove(1);
+                informationsTilePane.getChildren().add(1, gameStateText);
                 dialog.close();
             }
         });

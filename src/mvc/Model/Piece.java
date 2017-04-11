@@ -30,4 +30,7 @@ public abstract class Piece {
     }
         
     public abstract Move[] getPossibleMoves(Point p);
+    
+    @Override
+    public abstract String toString();
 }

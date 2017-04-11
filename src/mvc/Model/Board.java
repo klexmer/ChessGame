@@ -13,7 +13,7 @@ import java.util.Observable;
  *
  * @author p1401687
  */
-public class Board extends Observable{
+public class Board extends Observable implements Cloneable{
     private Piece[][] pieces;
 
     public Board() {
@@ -63,6 +63,27 @@ public class Board extends Observable{
         return pieces[x][y];
     }
     
+    public Point getPiecePosition(String piece, Player owner){
+        int row = 0, column = 0;
+        Point tempPoint;
+        Piece tempPiece;
+        for(int i = 0; i < 64; i++){
+            tempPoint = new Point(row, column);
+            tempPiece = getPiece(tempPoint);
+            if(tempPiece != null
+                    && tempPiece.getOwner() == owner
+                    && tempPiece.toString() == piece){
+                return tempPoint;
+            }
+            column++;
+            if (column > 7) {
+                column = 0;
+                row++;
+            }
+        }
+        return null;
+    }
+    
     public Move[] getPossibleMoves(Point p){
         int x = p.getX(),y = p.getY();
         
@@ -70,7 +91,7 @@ public class Board extends Observable{
         for(Move m : this.pieces[x][y].getPossibleMoves(p)){
             boolean isPossible = true;
             //System.out.println(m);
-            System.out.println("enemyNeeded : " + m.isEnemyNeeded() +" && " + pieces[m.getDestination().getX()][m.getDestination().getY()] == null);
+            //System.out.println("enemyNeeded : " + m.isEnemyNeeded() +" && " + pieces[m.getDestination().getX()][m.getDestination().getY()] == null);
             if(m.isEnemyNeeded() && pieces[m.getDestination().getX()][m.getDestination().getY()] == null){
                 isPossible = false;
             }
@@ -99,10 +120,54 @@ public class Board extends Observable{
         return possibleMoves;
     }
     
-    public void movePiece(Move m){
+    public void movePiece(Move m, boolean isATest){
         this.pieces[m.getDestination().getX()][m.getDestination().getY()] = this.pieces[m.getStart().getX()][m.getStart().getY()];
         this.pieces[m.getStart().getX()][m.getStart().getY()] = null;
-        setChanged();
-        notifyObservers();
+        if(!isATest){
+            this.setChanged();
+            this.notifyObservers();
+        }
+    }
+    
+    @Override
+    public Object clone(){
+        Board clonedBoard = new Board();
+        Point tempPoint;
+        Piece tempPiece;
+        Player tempPlayer;
+        int row = 0, column = 0;
+        for(int i = 0; i < 64; i++){
+            tempPoint = new Point(row, column);
+            tempPiece = getPiece(tempPoint);
+            if(tempPiece != null){
+                tempPlayer = tempPiece.getOwner();
+                switch(tempPiece.toString()){
+                    case "Pawn":
+                        clonedBoard.pieces[row][column] = new Pawn(tempPlayer);
+                        break;
+                    case "King":
+                        clonedBoard.pieces[row][column] = new King(tempPlayer);
+                        break;
+                    case "Queen":
+                        clonedBoard.pieces[row][column] = new Queen(tempPlayer);
+                        break;
+                    case "Knight":
+                        clonedBoard.pieces[row][column] = new Knight(tempPlayer);
+                        break;
+                    case "Rook":
+                        clonedBoard.pieces[row][column] = new Rook(tempPlayer);
+                        break;
+                    case "Bishop":
+                        clonedBoard.pieces[row][column] = new Bishop(tempPlayer);
+                        break;
+                }
+            }
+            column++;
+            if (column > 7) {
+                column = 0;
+                row++;
+            }
+        }
+        return clonedBoard;
     }
 }

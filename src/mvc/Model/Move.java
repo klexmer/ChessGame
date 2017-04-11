@@ -82,11 +82,11 @@ public class Move {
                 }
                 break;
             case UP:
-                System.out.println("Couocu");
+                //System.out.println("Couocu");
                 p = new Point(start.getX()-1, start.getY());
-                System.out.println("p = " + p + " Destination = " + this.destination);
+                //System.out.println("p = " + p + " Destination = " + this.destination);
                 while(p.getX() != destination.getX() || p.getY() != destination.getY()){
-                    System.out.println(p);
+                    //System.out.println(p);
                     inter.add(p);
                     p = new Point(p.getX()-1, p.getY());
                 }
@@ -102,10 +102,10 @@ public class Move {
         
         Point[] intermediate = new Point[inter.size()];
         intermediatePoints = inter.toArray(intermediate);
-        for(Point i : intermediatePoints)
-                System.out.println(i);
+        /*for(Point i : intermediatePoints)
+                System.out.println(i);*/
         }else{
-            System.out.println("NONE");
+            //System.out.println("NONE");
             intermediatePoints = null;
         }
     }

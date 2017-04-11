@@ -68,6 +68,11 @@ public class Pawn extends Piece{
         return possibleMoves;
     }
 
+    @Override
+    public String toString() {
+        return "Pawn";
+    }
+
 
     
 }

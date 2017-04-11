@@ -39,5 +39,10 @@ public class Bishop extends Piece{
         return possibleMoves;
     }
 
+    @Override
+    public String toString() {
+        return "Bishop";
+    }
+
     
 }

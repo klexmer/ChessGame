@@ -32,5 +32,10 @@ public class King extends Piece{
         possibleMoves = moves.toArray(possibleMoves);
         return possibleMoves;
     }
+
+    @Override
+    public String toString() {
+        return "King";
+    }
     
 }
