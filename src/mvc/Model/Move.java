@@ -29,6 +29,7 @@ public class Move {
     private Point start;
     private Point destination;
     private Point[] intermediatePoints;
+    private boolean enemyNeeded = false;
 
     public Move(Point start, Point destination,Direction d) {
         this.start = start;
@@ -127,6 +128,14 @@ public class Move {
 
     public Point getDestination() {
         return destination;
+    }
+
+    public void setEnemyNeeded(boolean enemyNeeded) {
+        this.enemyNeeded = enemyNeeded;
+    }
+
+    public boolean isEnemyNeeded() {
+        return enemyNeeded;
     }
 
     @Override

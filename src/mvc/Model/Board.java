@@ -64,6 +64,10 @@ public class Board extends Observable{
         for(Move m : this.pieces[x][y].getPossibleMoves(p)){
             boolean isPossible = true;
             //System.out.println(m);
+            System.out.println("enemyNeeded : " + m.isEnemyNeeded() +" && " + pieces[m.getDestination().getX()][m.getDestination().getY()] == null);
+            if(m.isEnemyNeeded() && pieces[m.getDestination().getX()][m.getDestination().getY()] == null){
+                isPossible = false;
+            }
             if(m.getIntermediatePoints() != null){
                 for(Point i : m.getIntermediatePoints()){
                     //System.out.println(i);
