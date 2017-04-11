@@ -32,6 +32,16 @@ public class Pawn extends Piece{
                 Point[] t = {new Point(x-1,y)};
                 moves.add(new Move(p,new Point(x-1,y),t));
             }
+            if(x-1>=0 && y-1>=0){
+                Move m = new Move(p,new Point(x-1,y-1),Move.Direction.NONE);
+                m.setEnemyNeeded(true);
+                moves.add(m);
+            }
+            if(x-1>=0 && y+1<8){
+                Move m = new Move(p,new Point(x-1,y+1),Move.Direction.NONE);
+                m.setEnemyNeeded(true);
+                moves.add(m);
+            }
         }else{
             if(x==1){
                 Point[] t = {new Point(x+1,y),new Point(x+2, y)};
@@ -40,6 +50,16 @@ public class Pawn extends Piece{
             if(x+1<8){
                 Point[] t = {new Point(x+1,y)};
                 moves.add(new Move(p,new Point(x+1,y),t));            
+            }
+            if(x+1<8 && y-1>=0){
+                Move m = new Move(p,new Point(x+1,y-1),Move.Direction.NONE);
+                m.setEnemyNeeded(true);
+                moves.add(m);
+            }
+            if(x+1<8 && y+1<8){
+                Move m = new Move(p,new Point(x+1,y+1),Move.Direction.NONE);
+                m.setEnemyNeeded(true);
+                moves.add(m);
             }
         }
         
