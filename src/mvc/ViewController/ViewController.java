@@ -11,21 +11,23 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -37,6 +39,7 @@ public class ViewController extends Application {
     private GridPane gridPaneBoard;
     private TilePane informationsTilePane;
     private Text turnDisplay;
+    private Stage mainWindow;
     /*
         Si la pièce est sélectionnée, le prochain clic déterminera la case
         destination de la pièce sélectionnée.
@@ -47,7 +50,7 @@ public class ViewController extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        
+        mainWindow = primaryStage;
         // Initialisation de la partie
         game = new Game();
         // Initialisation de la grille
@@ -58,15 +61,19 @@ public class ViewController extends Application {
             @Override
             public void update(Observable o, Object arg) {
                 updateGridPane();
+                if(selectedPieceIndex != -1)
                 unselectPiece();
             }
         });
         
         //Observeur regardant les informations du jeu
-        game.getBoard().addObserver(new Observer() {
+        game.addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
                 changePlayerTurn();
+                if(game.getEndOfGame() != "false"){
+                    showEndOfGameDialog();
+                }
             }
         });
         
@@ -76,22 +83,40 @@ public class ViewController extends Application {
         //gridPaneBoard.setGridLinesVisible(true);
         border.setCenter(gridPaneBoard);
         
-        turnDisplay = new Text("");
+        turnDisplay = new Text("Le tour est aux blancs");
         turnDisplay.setFont(Font.font ("Verdana", 20));
         informationsTilePane = new TilePane();
-        changePlayerTurn();
-        informationsTilePane.setHgap(10);
+        informationsTilePane.getChildren().add(0, turnDisplay);
+        informationsTilePane.setVgap(30);
         informationsTilePane.setPrefSize(250, 80);
         informationsTilePane.setPadding(new Insets(10, 10, 10, 10));
-        informationsTilePane.setTileAlignment(Pos.TOP_LEFT);
+        informationsTilePane.setTileAlignment(Pos.TOP_CENTER);
+        
+        
+        Text surrenderText = new Text("Déclarer forfait");
+        HBox backgroundSurrenderHBox = new HBox();
+        backgroundSurrenderHBox.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                game.endGame(true);
+            }
+        });
+        backgroundSurrenderHBox.setAlignment(Pos.CENTER);
+        backgroundSurrenderHBox.setBackground(Background.EMPTY);
+        backgroundSurrenderHBox.setStyle("-fx-background-color: white");
+        backgroundSurrenderHBox.getChildren().add(surrenderText);
+        informationsTilePane.getChildren().add(1, backgroundSurrenderHBox);
+        
+        //javafx.scene.control.Button surrenderButton = new javafx.scene.control.Button();
+        //informationsTilePane.getChildren().add(0, turnDisplay);
         
         border.setRight(informationsTilePane);
         
         Scene scene = new Scene(border, Color.LIGHTBLUE);
         
-        primaryStage.setTitle("Jeu d'échec");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        mainWindow.setTitle("Jeu d'échec");
+        mainWindow.setScene(scene);
+        mainWindow.show();
     }
     
     public void selectPiece(int x, int y){
@@ -275,8 +300,64 @@ public class ViewController extends Application {
         else
             joueurActuel = "noirs";
         turnDisplay.setText("Le tour est aux " + joueurActuel);
-        informationsTilePane.getChildren().clear();
-        informationsTilePane.getChildren().add(turnDisplay);
+        informationsTilePane.getChildren().remove(0);
+        informationsTilePane.getChildren().add(0, turnDisplay);
+    }
+    
+    public void showEndOfGameDialog(){
+        final Stage dialog = new Stage(StageStyle.TRANSPARENT);
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initOwner(mainWindow);
+        TilePane dialogPane = new TilePane();
+        dialogPane.setVgap(30);
+        dialogPane.setPrefSize(250, 80);
+        dialogPane.setPadding(new Insets(10, 10, 10, 10));
+        dialogPane.setTileAlignment(Pos.TOP_CENTER);
+        //Annonce de la fin de la partie
+        String result = new String("Le joueur ");
+        if(game.getActivePlayer().isWhite())
+            result += "blanc";
+        else
+            result += "noir";
+        result += " a ";
+        if(game.getEndOfGame() == "checkmate")
+            result += "perdu";
+        else
+            result += "déclaré forfait";
+        result += ". Que voulez-vous faire ?";
+        Text informationText = new Text(result);
+        Text restartGameText = new Text("Rejouer");
+        Text quitGameText = new Text("Quitter le jeu");
+        HBox backgroundRestartHBox = new HBox();
+        backgroundRestartHBox.setAlignment(Pos.CENTER);
+        backgroundRestartHBox.setStyle("-fx-background-color: white");
+        backgroundRestartHBox.getChildren().add(restartGameText);
+        backgroundRestartHBox.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                game.restartGame();
+                dialog.close();
+            }
+        });
+        HBox backgroundQuitHBox = new HBox();
+        backgroundQuitHBox.setAlignment(Pos.CENTER);
+        backgroundQuitHBox.setStyle("-fx-background-color: white");
+        backgroundQuitHBox.getChildren().add(quitGameText);
+        backgroundQuitHBox.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                dialog.close();
+                mainWindow.close();
+            }
+        });
+        dialogPane.getChildren().add(informationText);
+        dialogPane.getChildren().add(backgroundRestartHBox);
+        dialogPane.getChildren().add(backgroundQuitHBox);
+        Scene scene = new Scene(dialogPane);
+        scene.setFill(Color.LIGHTGREY);
+        dialog.setScene(scene);
+        dialog.setTitle("Jeu d'échec");
+        dialog.showAndWait();
     }
 
     /**
