@@ -92,19 +92,18 @@ public class Game extends Observable{
         Point kingPosition = getBoard().getPiecePosition("King", getActivePlayer());
         if(!isATest){
             //Cas où tous les coups mènent à l'échec
-            /*int countNbPossibleMoves = 0;
+            int countNbPossibleMoves = 0;
             for(int i = 0; i < 64; i++){
                 tempPoint = new Point(row, column);
                 tempPiece = getBoard().getPiece(tempPoint);
                 if(tempPiece != null && tempPiece.getOwner() == getActivePlayer()){
                     for(Move m : getBoard().getPossibleMoves(tempPoint)){
-                        System.out.println("oh yeaee");
                         if(this.checkIfMovePossible(m) == true){
                             countNbPossibleMoves++;
-                            System.out.println("oh yea");
                         }
                     }
                 }
+                column++;
                 if (column > 7) {
                 column = 0;
                 row++;
@@ -115,7 +114,7 @@ public class Game extends Observable{
                 setChanged();
                 notifyObservers();
                 return;
-            }*/
+            }
         }
         row = 0; column = 0;
         int x = kingPosition.getX();
