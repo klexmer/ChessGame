@@ -13,7 +13,7 @@ public class ModelTest {
     public static void main(String[] args){
         Player p = new Player(true);
         Queen rook = new Queen(null);
-        for(Move m :rook.getPossibleMoves(new Point(2, 2))){
+        for(Move m :rook.getMoves(new Point(2, 2))){
             System.out.println(m);
         }
     }

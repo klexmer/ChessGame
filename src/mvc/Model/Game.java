@@ -5,6 +5,11 @@
  */
 package mvc.Model;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Observable;
 
 /**
@@ -40,6 +45,10 @@ public class Game extends Observable{
             activePlayer = white;
         setChanged();
         notifyObservers();
+        checkCheck(false);
+        if(state == "check"){
+            checkCheckmate();
+        }
     }
     
     public Player getActivePlayer(){
@@ -82,6 +91,19 @@ public class Game extends Observable{
         notifyObservers();
     }
     
+    public List<Entry<Move, Boolean>> getMoves(Point p){
+        List<Entry<Move, Boolean>> movesPossible = new ArrayList<>();
+        Move[] moves = board.getMoves(p);
+        for(Move m : moves){
+            if(checkIfMovePossible(m)){
+                movesPossible.add(new SimpleEntry<>(m, true));
+            }
+            else
+                movesPossible.add(new SimpleEntry<>(m, false));
+        }
+        return movesPossible;
+    }
+    
     public void checkCheck(boolean isATest){
         this.state = "normal";
         Point tempPoint;
@@ -97,8 +119,8 @@ public class Game extends Observable{
                 tempPoint = new Point(row, column);
                 tempPiece = getBoard().getPiece(tempPoint);
                 if(tempPiece != null && tempPiece.getOwner() == getActivePlayer()){
-                    for(Move m : getBoard().getPossibleMoves(tempPoint)){
-                        if(this.checkIfMovePossible(m) == true){
+                    for(Entry<Move, Boolean> m : getMoves(tempPoint)){
+                        if(m.getValue() == true){
                             countNbPossibleMoves++;
                         }
                     }
@@ -126,7 +148,7 @@ public class Game extends Observable{
                 //Les pions agissent différemment que les autres pièces pour
                 //capturer des pièces ennemies. Nous les traitons séparément.
                 if(tempPiece.toString() != "Pawn"){
-                    for(Move p : getBoard().getPossibleMoves(tempPoint)){
+                    for(Move p : this.getBoard().getMoves(tempPoint)){
                         x2 = p.getDestination().getX();
                         y2 = p.getDestination().getY();
                         if(x == x2 && y == y2){
@@ -178,11 +200,11 @@ public class Game extends Observable{
         int x = kingPosition.getX();
         int y = kingPosition.getY();
         int x2, bx, y2, by, y3;
-        for(Move p : getBoard().getPossibleMoves(kingPosition)){
+        for(Entry<Move, Boolean> p : getMoves(kingPosition)){
             x = kingPosition.getX();
-            x2 = p.getDestination().getX();
+            x2 = p.getKey().getDestination().getX();
             y = kingPosition.getY();
-            y2 = p.getDestination().getY();
+            y2 = p.getKey().getDestination().getY();
             bx = x2 - (x - 1);
             by = y2 - (y - 1);
             if(bx >= 0 && bx < 3 && by >= 0 && by < 3){
@@ -202,7 +224,7 @@ public class Game extends Observable{
                 //Les pions agissent différemment que les autres pièces pour
                 //capturer des pièces ennemies. Nous les traitons séparément.
                 if(tempPiece.toString() != "Pawn"){
-                    for(Move p : getBoard().getPossibleMoves(tempPoint)){
+                    for(Move p : getBoard().getMoves(tempPoint)){
                         x2 = p.getDestination().getX();
                         y2 = p.getDestination().getY();
                         bx = x2 - (x - 1);

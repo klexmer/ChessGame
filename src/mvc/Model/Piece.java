@@ -29,7 +29,7 @@ public abstract class Piece {
         return owner;
     }
         
-    public abstract Move[] getPossibleMoves(Point p);
+    public abstract Move[] getMoves(Point p);
     
     @Override
     public abstract String toString();

@@ -84,26 +84,21 @@ public class Board extends Observable implements Cloneable{
         return null;
     }
     
-    public Move[] getPossibleMoves(Point p){
+    public Move[] getMoves(Point p){
         int x = p.getX(),y = p.getY();
         
         List<Move> moves = new ArrayList<>();
-        for(Move m : this.pieces[x][y].getPossibleMoves(p)){
+        for(Move m : this.pieces[x][y].getMoves(p)){
             boolean isPossible = true;
-            //System.out.println(m);
-            //System.out.println("enemyNeeded : " + m.isEnemyNeeded() +" && " + pieces[m.getDestination().getX()][m.getDestination().getY()] == null);
             if(m.isEnemyNeeded() && pieces[m.getDestination().getX()][m.getDestination().getY()] == null){
                 isPossible = false;
             }
             if(m.getIntermediatePoints() != null){
                 for(Point i : m.getIntermediatePoints()){
-                    //System.out.println(i);
                     if(pieces[i.getX()][i.getY()] != null){
                         isPossible = false;
                     }
                 }
-            }else{
-                //System.out.println("Est null");
             }
             if(isPossible){
                 if(pieces[m.getDestination().getX()][m.getDestination().getY()] == null){
@@ -115,9 +110,9 @@ public class Board extends Observable implements Cloneable{
                 }
             }
         }
-        Move[] possibleMoves = new Move[moves.size()];
-        possibleMoves = moves.toArray(possibleMoves);
-        return possibleMoves;
+        Move[] allMoves = new Move[moves.size()];
+        allMoves = moves.toArray(allMoves);
+        return allMoves;
     }
     
     public void movePiece(Move m, boolean isATest){

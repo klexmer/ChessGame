@@ -19,7 +19,7 @@ public class Knight extends Piece{
     }
 
     @Override
-    public Move[] getPossibleMoves(Point startPoint){
+    public Move[] getMoves(Point startPoint){
         int x = startPoint.getX(),y = startPoint.getY();
         
         List<Move> moves = new ArrayList<>();

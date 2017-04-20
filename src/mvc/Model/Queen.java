@@ -19,7 +19,7 @@ public class Queen extends Piece{
     }
 
     @Override
-    public Move[] getPossibleMoves(Point p){
+    public Move[] getMoves(Point p){
         int x = p.getX(),y = p.getY();
         List<Move> moves = new ArrayList<>();
         

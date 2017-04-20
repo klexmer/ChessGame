@@ -1,6 +1,8 @@
 package mvc.ViewController;
 
 
+import java.util.List;
+import java.util.Map;
 import mvc.Model.*;
 
 
@@ -76,7 +78,6 @@ public class ViewController extends Application {
                     gameStateText.setText("Echec");
                     informationsTilePane.getChildren().remove(1);
                     informationsTilePane.getChildren().add(1, gameStateText);
-                    game.checkCheckmate();
                 }
                 else if(game.getState() == "normal"){
                     gameStateText.setText("");
@@ -161,15 +162,14 @@ public class ViewController extends Application {
         SubScene boxDest;
         if(toggle == true){
             int index;
-            Move moves[] = game.getBoard().getPossibleMoves(selectedPoint);
+            List<Map.Entry<Move, Boolean>> moves = game.getMoves(selectedPoint);
             Point destination;
-            boolean noCheck = false;
-            for(Move m : moves){
-                destination = new Point(m.getDestination().getX(), m.getDestination().getY());
+            for(Map.Entry<Move, Boolean> m : moves){
+                destination = new Point(m.getKey().getDestination().getX(),
+                        m.getKey().getDestination().getY());
                 index = (destination.getX() * 8) + destination.getY();
                 boxDest = (SubScene)gridPaneBoard.getChildren().get(index);
-                noCheck  = game.checkIfMovePossible(m);
-                if(noCheck)
+                if(m.getValue() == true)
                     boxDest.setFill(Color.LIGHTGREEN);
                 else
                     boxDest.setFill(Color.LIGHTSALMON);
@@ -271,34 +271,33 @@ public class ViewController extends Application {
                         * endroit. Sinon, on déselectionne la pièce.*/
                         //Vérification de la position de la case
                         Point startPoint = new Point(selectedPieceIndex / 8, selectedPieceIndex % 8);
-                        Move moves[] = game.getBoard().getPossibleMoves(selectedPoint);
+                        List<Map.Entry<Move, Boolean>> moves = game.getMoves(selectedPoint);
                         Point destination;
                         int index;
                         int indexMoves = 0;
-                        Move tempMove;
+                        Map.Entry<Move, Boolean> tempMove = null;
                         boolean isAPossibleMove = false;
-                        if(moves.length != 0)
-                        {
+                        if(moves.size() != 0){
                             do{
-                                tempMove = moves[indexMoves];
-                                destination = new Point(tempMove.getDestination().getX(), tempMove.getDestination().getY());
+                                tempMove = moves.get(indexMoves);
+                                destination = new Point(tempMove.getKey().getDestination().getX(),
+                                        tempMove.getKey().getDestination().getY());
                                 index = destination.getX() * 8 + destination.getY();
                                 if(x == destination.getX() && y == destination.getY()){
                                     isAPossibleMove = true;
                                 }
                                 indexMoves++;
-                            }while(indexMoves < moves.length && !isAPossibleMove);
+                            }while(indexMoves < moves.size() && !isAPossibleMove);
                         }
                         if(isAPossibleMove){
-                            //La case est un mouvement possible:
-                            //déplacement de la pièce sur le plateau
-                            Point destinationPoint = new Point(x, y);
-                            Move move = new Move(startPoint, destinationPoint, Move.Direction.NONE);
-                            boolean noCheck =  game.checkIfMovePossible(move);
-                            if(noCheck == true){
+                            //La case est un mouvement possible, mais il faut
+                            //vérifier que cela ne provoque pas d'échec
+                            if(tempMove.getValue() == true){
+                                Point destinationPoint = new Point(x, y);
+                                Move move = new Move(startPoint, destinationPoint,
+                                        Move.Direction.NONE);
                                 game.getBoard().movePiece(move, false);
                                 game.nextPlayerTurn();
-                                game.checkCheck(false);
                             }
                         }
                         else{
