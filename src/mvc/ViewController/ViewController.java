@@ -92,7 +92,6 @@ public class ViewController extends Application {
         updateGridPane();
         
         BorderPane border = new BorderPane();
-        //gridPaneBoard.setGridLinesVisible(true);
         border.setCenter(gridPaneBoard);
         
         playerTurnText = new Text("Le tour est aux blancs");
@@ -131,6 +130,7 @@ public class ViewController extends Application {
         Scene scene = new Scene(border, Color.LIGHTBLUE);
         
         mainWindow.setTitle("Jeu d'échec");
+        mainWindow.getIcons().add(new Image(getClass().getResource("/resources/chessIcon.png").toString()));
         mainWindow.setScene(scene);
         mainWindow.show();
     }

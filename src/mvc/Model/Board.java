@@ -45,8 +45,8 @@ public class Board extends Observable implements Cloneable{
         pieces[7][0] = new Rook(white);
         pieces[7][1] = new Knight(white);
         pieces[7][2] = new Bishop(white);
-        pieces[7][4] = new Queen(white);
-        pieces[7][3] = new King(white);
+        pieces[7][3] = new Queen(white);
+        pieces[7][4] = new King(white);
         pieces[7][5] = new Bishop(white);
         pieces[7][6] = new Knight(white);
         pieces[7][7] = new Rook(white);
